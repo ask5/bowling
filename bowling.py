@@ -112,7 +112,7 @@ class Bowling(object):
                         result['roll_3'] = ''
 
                 player.set_result(frame=frame, result=result)
-                pprint(vars(player))
+                #pprint(vars(player))
                 player.calculate_score()
 
             self.print_scoreboard()
