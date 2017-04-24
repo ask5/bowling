@@ -60,7 +60,12 @@ class Bowling(object):
 
                 # get the first roll
                 result['roll_1'] = self.get_fresh_pins("{}'s turn #1: ".format(player.name))
+                if strike(result['roll_1']):
+                    player.rolls.append(10)
+                else:
+                    player.rolls.append(int(result['roll_1']))
 
+                result['index'] = len(player.rolls) - 1
                 # if it is not the 10th frame then player gets 2 chances, depending upon if the first roll is strike or not
                 if frame < 10:
                     if strike(result['roll_1']):
@@ -69,27 +74,45 @@ class Bowling(object):
                     else:
                         remainder = 10 if frame == 10 else 10 - int(result['roll_1'])
                         result['roll_2'] = self.get_spare_pins("{}'s turn #2: ".format(player.name), remainder)
+
                         if spare(result['roll_1'], result['roll_2']):
                             result['spare'] = True
+                            player.rolls.append(remainder)
+                        else:
+                            player.rolls.append(int(result['roll_2']))
                     result['roll_3'] = ''
                 else:
                     # for 10th frame, if roll 1 is strike then get fresh pins else get spare pins
                     if strike(result['roll_1']):
                         result['strike'] = True
                         result['roll_2'] = self.get_fresh_pins("{}'s turn #1: ".format(player.name))
+                        if strike(result['roll_2']):
+                            player.rolls.append(10)
+                        else:
+                            player.rolls.append(int(result['roll_2']))
                     else:
-                        remainder = 10 if frame == 10 else 10 - int(result['roll_1'])
+                        remainder = 10 - int(result['roll_1'])
                         result['roll_2'] = self.get_spare_pins("{}'s turn #2: ".format(player.name), remainder)
+                        print(remainder)
+                        if result['roll_2'] == "/":
+                            player.rolls.append(remainder)
+                        else:
+                            player.rolls.append(int(result['roll_2']))
+
 
                     # if its 10th frame, then you'll need the thrid roll if you play strike on the first roll
                     # or spare on the first 2 rolls
                     if strike(result['roll_1']) or result['roll_2'] == "/":
                         result['roll_3'] = self.get_fresh_pins("{}'s turn #3: ".format(player.name))
+                        if strike(result['roll_3']):
+                            player.rolls.append(10)
+                        else:
+                            player.rolls.append(int(result['roll_3']))
                     else:
                         result['roll_3'] = ''
 
                 player.set_result(frame=frame, result=result)
-
+                pprint(vars(player))
                 player.calculate_score()
 
             self.print_scoreboard()
