@@ -93,7 +93,7 @@ class Bowling(object):
                     else:
                         remainder = 10 - int(result['roll_1'])
                         result['roll_2'] = self.get_spare_pins("{}'s turn #2: ".format(player.name), remainder)
-                        print(remainder)
+                        #print(remainder)
                         if result['roll_2'] == "/":
                             player.rolls.append(remainder)
                         else:
